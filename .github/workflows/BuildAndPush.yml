@@ -1,0 +1,46 @@
+name: Docker Build Push Main
+
+on:
+  push:
+    branches: [ "Main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: [self-hosted, linux, x64, dont-deploy-main]
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Extract version from package.json
+        id: extract_version
+        run: |
+          version=$(jq -r '.version' package.json)
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: ist files in working directory
+        run: ls -al
+    
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/hasura_command:v${{ env.version }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/hasura_command:latest

@@ -1,0 +1,38 @@
+version: 3
+schema: public
+environmet: HASURA_GRAPHQL_APPLICATION_DB_URL
+#List Tracking tables
+tables:
+  - audit_logs
+  - board_details
+  - users
+  - board_tasks
+  - boards
+  - encounters
+  - orders
+  - patients
+  - patients_search
+  - patients_search_activities
+  - results
+  - roles
+  - tenants
+  - user_activities
+sources:
+  - name: testDB
+    kind: postgres
+    tables:
+# action level permissions. on particular columns/rows with filters
+      - table: { schema: public, name: users }
+        select_permissions: [{ role: viewer, permission: { columns: '*', filter: { tenant_id: { _eq: 'X-Hasura-Tenant-Id' } }, allow_aggregations: true, limit: 100 } }]
+        insert_permissions: [{ role: viewer, permission: { columns: '*', check: {} } }]
+        update_permissions: [{ role: viewer, permission: { columns: '*', filter: {} } }]
+        delete_permissions: [{ role: viewer, permission: { filter: {} } }]
+# role level permissions on a table without filter
+roles:
+  - name: clerical
+    table_permissions: 
+      - table: audit_logs
+        permissions: { select: true, insert: true, update: true, delete: true }
+
+event_triggers:
+      - trigger: { name: user_sync, table_name: users, webhook: http://localhost:3000/api/v1/user }
