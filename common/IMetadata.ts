@@ -41,5 +41,14 @@ type Role = {
 };
 
 type EventTrigger = {
-  trigger: { name: string; webhook: string, table_name: string };
+  trigger: {
+    name: string;
+    webhook: string;
+    table_name: string;
+    headers?: {
+      name: string;
+      value?: string;
+      value_from_env?: string;
+    }[];
+  };
 };
