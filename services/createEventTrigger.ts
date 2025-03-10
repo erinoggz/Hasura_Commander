@@ -25,6 +25,7 @@ export async function createEventTriggers(
           webhook: trigger.trigger.webhook,
           insert: { columns: "*" },
           update: { columns: "*" },
+          headers: {}
         },
       };
 
