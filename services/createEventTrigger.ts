@@ -27,6 +27,14 @@ export async function createEventTriggers(
           update: { columns: "*" },
         },
       };
+
+     if (trigger.trigger.headers && trigger.trigger.headers.length > 0) {
+        eventTriggerQuery.args.headers = trigger.trigger.headers.map((head: any) =>
+         head.value_from_env
+            ? { name: head.name, value_from_env: head.value_from_env }
+            : { name: head.name, value: head.value }
+        );
+     }
   
       console.log(`Creating event trigger "${trigger.trigger.name}"`);
       await makeHasuraRequest(
