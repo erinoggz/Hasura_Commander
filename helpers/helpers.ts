@@ -38,15 +38,6 @@ export async function makeHasuraRequest(
   }
 }
 
-export const pluralize = (name: string): string => {
-  // Check if it already ends with 's'
-  if (name?.endsWith('s')) {
-    return name;
-  }
-  // Handle special cases like 'y' ending
-  if (name?.endsWith('y')) {
-    return name.slice(0, -1) + 'ies';
-  }
-  // Default case, just add 's'
-  return name + 's';
+export const extractTableName = (fullTableName: string) => {
+  return fullTableName?.includes('.') ? fullTableName?.split('.').pop() : fullTableName;
 }
