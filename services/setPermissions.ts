@@ -21,15 +21,20 @@ export async function setPermissions(
       return actions.flatMap((action) => {
         const permissions = table[action];
         if (permissions) {
-          return permissions.map((permission) => ({
-            type: `create_${action.replace("_permissions", "")}_permission`,
-            args: {
-              source: source.name,
-              table: table.table,
-              role: permission.role,
-              permission: permission.permission,
-            },
-          }));
+          return permissions.map((permission) => {
+            console.log(
+              `Setting ${action.replace("_permissions", "")} permission for role ${permission.role} on table ${JSON.stringify(table.table)}`
+            );
+            return {
+              type: `create_${action.replace("_permissions", "")}_permission`,
+              args: {
+                source: source.name,
+                table: table.table,
+                role: permission.role,
+                permission: permission.permission,
+              },
+            };
+          });
         }
         return [];
       });
@@ -45,6 +50,9 @@ export async function setPermissions(
 
       for (const action of actions) {
         if (tablePerm.permissions[action]) {
+          console.log(
+            `Setting ${action} permission for role '${role?.name}' on table '${tablePerm?.table}'`
+          );
           queries.push({
             type: `create_${action}_permission`,
             args: {

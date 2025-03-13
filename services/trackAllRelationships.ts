@@ -59,29 +59,29 @@ export async function trackAllRelationships(
 
   for (const [table, column, refTable] of relationships) {
     if (!tables.includes(table) || !tables.includes(refTable)) continue;
-
+    const singularRefTable = refTable.endsWith('s') ? refTable.slice(0, -1) : refTable;
     // Track object relationship
     await makeHasuraRequest(hasuraUrl, hasuraAdminSecret, "/v1/metadata", {
       type: "pg_create_object_relationship",
       args: {
         source: sourceName,
         table: { schema: metadata.schema, name: table },
-        name: `${refTable}_by_${column}`,
+        name: singularRefTable,
         using: { foreign_key_constraint_on: column },
       },
     });
-    console.log(`Object relationship tracked: ${table} -> ${refTable}`);
+    console.log(`Object relationship tracked: ${table} -> ${singularRefTable}`);
 
     // Track array relationship
     await makeHasuraRequest(hasuraUrl, hasuraAdminSecret, "/v1/metadata", {
       type: "pg_create_array_relationship",
       args: {
         source: sourceName,
-        table: { schema: "public", name: refTable },
+        table: { schema: metadata.schema, name: refTable },
         name: table,
         using: {
           foreign_key_constraint_on: {
-            table: { schema: "public", name: table },
+            table: { schema: metadata.schema, name: table },
             column,
           },
         },
