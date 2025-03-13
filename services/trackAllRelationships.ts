@@ -1,6 +1,6 @@
 /** @format */
 
-import { loadYamlMetadata, makeHasuraRequest } from "../helpers/helpers";
+import { loadYamlMetadata, makeHasuraRequest, pluralize } from "../helpers/helpers";
 
 export async function trackAllRelationships(
   hasuraUrl: string,
@@ -66,7 +66,7 @@ export async function trackAllRelationships(
       args: {
         source: sourceName,
         table: { schema: metadata.schema, name: table },
-        name: singularRefTable,
+        name: refTable,
         using: { foreign_key_constraint_on: column },
       },
     });
@@ -78,7 +78,7 @@ export async function trackAllRelationships(
       args: {
         source: sourceName,
         table: { schema: metadata.schema, name: refTable },
-        name: table,
+        name: pluralize(table),
         using: {
           foreign_key_constraint_on: {
             table: { schema: metadata.schema, name: table },
