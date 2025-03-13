@@ -66,7 +66,7 @@ export async function trackAllRelationships(
       args: {
         source: sourceName,
         table: { schema: metadata.schema, name: table },
-        name: refTable,
+        name: singularRefTable,
         using: { foreign_key_constraint_on: column },
       },
     });
