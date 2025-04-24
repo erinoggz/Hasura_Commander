@@ -46,3 +46,7 @@ event_triggers:
       headers:
         - name: Authorization
           value_from_env: WEBHOOK_SECRET
+      retry_conf:
+        num_retries: 3
+        interval_sec: 15
+        timeout_sec: 90
