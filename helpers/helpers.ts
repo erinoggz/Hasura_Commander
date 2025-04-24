@@ -37,3 +37,7 @@ export async function makeHasuraRequest(
     throw error;
   }
 }
+
+export const extractTableName = (fullTableName: string) => {
+  return fullTableName?.includes('.') ? fullTableName?.split('.').pop() : fullTableName;
+}

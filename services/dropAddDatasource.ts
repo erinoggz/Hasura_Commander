@@ -8,6 +8,8 @@ export async function dropDatabaseSource(
   filePath: string
 ) {
   const metadata = loadYamlMetadata(filePath);
+  const sourceName = metadata.sources[0].name;
+
   const dropSourceQuery = {
     type: "pg_drop_source",
     args: {
@@ -16,15 +18,21 @@ export async function dropDatabaseSource(
     },
   };
 
-  await makeHasuraRequest(
-    hasuraUrl,
-    hasuraAdminSecret,
-    "/v1/metadata",
-    dropSourceQuery
-  );
-  console.log(
-    `Database source "${metadata.sources[0].name}" dropped successfully`
-  );
+  try {
+    await makeHasuraRequest(
+      hasuraUrl,
+      hasuraAdminSecret,
+      "/v1/metadata",
+      dropSourceQuery
+    );
+    console.log(`Database source "${sourceName}" dropped successfully`);
+  } catch (err: any) {
+    if (err?.response?.data?.code === "not-exists") {
+      console.warn(`Source "${sourceName}" does not exist. Skipping drop.`);
+      return;
+    }
+    throw err;
+  }
 }
 
 export async function addDatabaseSource(

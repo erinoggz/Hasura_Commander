@@ -1,13 +1,13 @@
-name: Docker Build Push Main
+name: Docker Build Push Dev
 
 on:
   push:
-    branches: [ "Main" ]
+    branches: [ "dev" ]
   workflow_dispatch:
 
 jobs:
   build-and-push:
-    runs-on: [self-hosted, linux, x64, dont-deploy-main]
+    runs-on: [self-hosted, linux, x64, hostinger832]
     defaults:
       run:
         working-directory: .

@@ -1,6 +1,7 @@
 /** @format */
 
-import { loadYamlMetadata, makeHasuraRequest } from "../helpers/helpers";
+import { extractTableName, loadYamlMetadata, makeHasuraRequest } from "../helpers/helpers";
+import pluralize from 'pluralize';
 
 export async function trackAllRelationships(
   hasuraUrl: string,
@@ -58,35 +59,46 @@ export async function trackAllRelationships(
   const relationships = fkResponse.result.slice(1);
 
   for (const [table, column, refTable] of relationships) {
-    if (!tables.includes(table) || !tables.includes(refTable)) continue;
-
+    // Extract clean table names
+    const cleanTable = extractTableName(table);
+    const cleanRefTable = extractTableName(refTable);
+    
+    // Check if tables are tracked
+    if (!tables.includes(cleanTable) || !tables.includes(cleanRefTable)) continue;
+    
+    // Get singular form of the referenced table for object relationship
+    const singularRefTable = pluralize.singular(cleanRefTable);
+    
     // Track object relationship
     await makeHasuraRequest(hasuraUrl, hasuraAdminSecret, "/v1/metadata", {
       type: "pg_create_object_relationship",
       args: {
         source: sourceName,
-        table: { schema: metadata.schema, name: table },
-        name: `${refTable}_by_${column}`,
+        table: { schema: metadata.schema, name: cleanTable },
+        name: singularRefTable,
         using: { foreign_key_constraint_on: column },
       },
     });
-    console.log(`Object relationship tracked: ${table} -> ${refTable}`);
+    console.log(`Object relationship tracked: ${cleanTable} -> ${singularRefTable}`);
 
+    // Get plural form of the table for array relationship
+    const pluralTable = pluralize.plural(cleanTable);
+    
     // Track array relationship
     await makeHasuraRequest(hasuraUrl, hasuraAdminSecret, "/v1/metadata", {
       type: "pg_create_array_relationship",
       args: {
         source: sourceName,
-        table: { schema: "public", name: refTable },
-        name: table,
+        table: { schema: metadata.schema, name: cleanRefTable },
+        name: pluralTable,
         using: {
           foreign_key_constraint_on: {
-            table: { schema: "public", name: table },
+            table: { schema: metadata.schema, name: cleanTable },
             column,
           },
         },
       },
     });
-    console.log(`Array relationship tracked: ${refTable} -> ${table}`);
+    console.log(`Array relationship tracked: ${cleanRefTable} -> ${pluralTable}`);
   }
 }
