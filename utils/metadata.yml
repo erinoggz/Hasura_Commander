@@ -35,4 +35,14 @@ roles:
         permissions: { select: true, insert: true, update: true, delete: true }
 
 event_triggers:
-      - trigger: { name: user_sync, table_name: users, webhook: http://localhost:3000/api/v1/user }
+  - trigger:
+      name: user_sync
+      table_name: users
+      webhook: http://localhost:3000/api/v1/user
+      operations:
+        update:
+          columns:
+            - email
+      headers:
+        - name: Authorization
+          value_from_env: WEBHOOK_SECRET

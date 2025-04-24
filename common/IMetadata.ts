@@ -45,10 +45,22 @@ type EventTrigger = {
     name: string;
     webhook: string;
     table_name: string;
+    operations?: {
+      insert?: { columns?: string[] };
+      update?: { columns?: string[] };
+      delete?: boolean;
+    };
     headers?: {
       name: string;
       value?: string;
       value_from_env?: string;
     }[];
+    enable_manual?: boolean;
+    retry_conf?: {
+      num_retries: number;
+      interval_sec: number;
+      timeout_sec: number;
+    };
+    replace?: boolean;
   };
 };
