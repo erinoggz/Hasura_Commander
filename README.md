@@ -39,3 +39,8 @@ To run the script, use the following command:
 ```bash
 npx ts-node app.ts -e <HASURA_URL> -s <HASURA_ADMIN_SECRET> -f utils/metadata.yml
 ```
+## 🤝 Contributions
+
+Pull requests, issues, and discussions are welcome.  
+If you have ideas for improving Hasura metadata automation or CI-friendly enhancements, feel free to contribute!
+
