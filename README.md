@@ -33,16 +33,6 @@ A developer utility for automating Hasura metadata configuration. This tool drop
    cd Hasura_Commander
 
 
-## Prerequisites
-
-- **Node.js** and **TypeScript** installed.
-- **Hasura URL** and **Admin Secret**: The Hasura instance URL and admin secret are required for authentication.
-- **YAML Metadata File**: The `metadata.yml` file should be present in the project directory. A sample metadata is located in utils folder
-
-## Setup Instructions
-
-**Install dependencies**: Run `yarn` to install required packages.
-
 ## Usage
 
 To run the script, use the following command:
