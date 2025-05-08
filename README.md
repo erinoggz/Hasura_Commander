@@ -44,3 +44,7 @@ npx ts-node app.ts -e <HASURA_URL> -s <HASURA_ADMIN_SECRET> -f utils/metadata.ym
 Pull requests, issues, and discussions are welcome.  
 If you have ideas for improving Hasura metadata automation or CI-friendly enhancements, feel free to contribute!
 
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
