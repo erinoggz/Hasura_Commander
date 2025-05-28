@@ -47,10 +47,10 @@ export async function createEventTriggers(
     ];
 
     if (Object.keys(operations).length === 0) {
-      // If no operations specified, default to insert and update on all columns
+      // If no operations specified, default to insert, update and delete on all columns
       eventTriggerQuery.args.insert = { columns: "*" };
       eventTriggerQuery.args.update = { columns: "*" };
-      eventTriggerQuery.args.delete = null;
+      eventTriggerQuery.args.delete = { columns: "*" };
     } else {
       operationTypes.forEach(({ key, hasColumns }) => {
         if (operations[key]) {
