@@ -24,7 +24,7 @@ export async function createEventTriggers(
           name: trigger.trigger.table_name,
           schema: metadata.schema,
         },
-        webhook: trigger?.trigger?.webhook,
+        webhook: trigger?.trigger?.webhook || null,
         insert: null,
         update: null,
         delete: null,
@@ -36,27 +36,24 @@ export async function createEventTriggers(
           timeout_sec: 60,
         },
         replace: trigger?.trigger?.replace || false,
+        request_transform: trigger?.trigger?.request_transform || null,
       },
     };
 
     const operations = trigger.trigger.operations || {};
-    const operationTypes = [
-      { key: "insert", hasColumns: true },
-      { key: "update", hasColumns: true },
-      { key: "delete", hasColumns: false },
-    ];
+    const operationTypes = ["insert", "update", "delete"];
 
     if (Object.keys(operations).length === 0) {
-      // If no operations specified, default to insert, update and delete on all columns
+      // If no operations specified, default to all operations on all columns
       eventTriggerQuery.args.insert = { columns: "*" };
       eventTriggerQuery.args.update = { columns: "*" };
       eventTriggerQuery.args.delete = { columns: "*" };
     } else {
-      operationTypes.forEach(({ key, hasColumns }) => {
-        if (operations[key]) {
-          eventTriggerQuery.args[key] = hasColumns
-            ? { columns: operations[key]?.columns || "*" }
-            : {};
+      operationTypes.forEach((key) => {
+        if (operations[key] === true || (operations[key] && typeof operations[key] === 'object')) {
+          eventTriggerQuery.args[key] = {
+            columns: operations[key]?.columns || "*",
+          };
         } else {
           eventTriggerQuery.args[key] = null;
         }
