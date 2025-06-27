@@ -62,5 +62,21 @@ type EventTrigger = {
       timeout_sec: number;
     };
     replace?: boolean;
+    request_transform?: {
+      template_engine: string;
+      version: number;
+      method?: string;
+      url?: string;
+      query_params?: Record<string, any>;
+      body?: {
+        action: string;
+        template?: string;
+        form_template?: Record<string, any>;
+      };
+      request_headers?: {
+        remove_headers?: string[];
+        add_headers?: Record<string, string>;
+      };
+    };
   };
 };
