@@ -50,3 +50,11 @@ event_triggers:
         num_retries: 3
         interval_sec: 15
         timeout_sec: 90
+
+  - trigger:
+      name: board_details_sync
+      table_name: board_details
+      webhook: http://localhost:3000/api/v1/board_details
+      headers:
+        - name: Authorization
+          value_from_env: WEBHOOK_SECRET
