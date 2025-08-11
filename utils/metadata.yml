@@ -50,3 +50,37 @@ event_triggers:
         num_retries: 3
         interval_sec: 15
         timeout_sec: 90
+
+  - trigger:
+      name: board_details_sync
+      table_name: board_details
+      webhook: http://localhost:3000/api/v1/board_details
+      headers:
+        - name: Authorization
+          value_from_env: WEBHOOK_SECRET
+
+  - trigger:
+      name: user_client_sync
+      table_name: client_users
+      webhook: http://localhost:3000/api/v1/user/client_users
+
+  - trigger:
+      name: files_sync
+      table_name: files
+      webhook: http://localhost:3000/api/v1/case/files
+      operations:
+        update:
+          columns:
+            - status
+      request_transform:
+        template_engine: "Kriti"
+        version: 2
+        query_params:
+          workflow: "case"
+        body:
+          action: "transform"
+          template: |
+            {
+              "op": {{$body.event.op}},
+              "data": {{$body.event.data.new}}
+            }
