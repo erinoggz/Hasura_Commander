@@ -4,6 +4,7 @@ export type SchemaConfig = {
   version: number;
   schema: string;
   tables: string[];
+  custom_functions?: CustomFunction[];
   sources: Source[];
   roles: Role[];
   environmet: string;
@@ -38,6 +39,14 @@ type Permission = {
 type Role = {
   name: string;
   table_permissions: { table: string; permissions: Record<string, boolean> }[];
+};
+
+type CustomFunction = {
+  name: string;
+  configuration?: {
+    session_argument?: string;
+    exposed_as?: "query" | "mutation";
+  };
 };
 
 type EventTrigger = {

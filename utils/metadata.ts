@@ -15,6 +15,7 @@ export async function runAllActions(
     await dropDatabaseSource(hasuraUrl, hasuraAdminSecret, filePath);
     await addDatabaseSource(hasuraUrl, hasuraAdminSecret, filePath);
     await trackAllTables(hasuraUrl, hasuraAdminSecret, filePath);
+    await trackCustomFunctions(hasuraUrl, hasuraAdminSecret, filePath);
     await trackAllRelationships(hasuraUrl, hasuraAdminSecret, filePath);
     await setPermissions(hasuraUrl, hasuraAdminSecret, filePath);
     await createEventTriggers(hasuraUrl, hasuraAdminSecret, filePath);
