@@ -31,14 +31,39 @@ A developer utility for automating Hasura metadata configuration. This tool drop
    ```bash
    git clone https://github.com/erinoggz/Hasura_Commander.git
    cd Hasura_Commander
+   ```
 
+---
 
 ## Usage
 
-To run the script, use the following command:
+### Run with Node / TypeScript
+
 ```bash
 npx ts-node app.ts -e <HASURA_URL> -s <HASURA_ADMIN_SECRET> -f utils/metadata.yml
 ```
+
+### Run with Docker
+
+Pull the latest image from Docker Hub:
+
+```bash
+docker pull erindeji/hasura_command:latest
+```
+
+Then run the container, mounting your local `metadata.yml` into the container:
+
+```bash
+docker run --name hasura-commander \
+  -v $(pwd)/SetPermissions/metadata.yml:/app/SetPermissions/metadata.yml \
+  erindeji/hasura_command:latest \
+  -e <HASURA_URL>/ \
+  -s <HASURA_ADMIN_SECRET> \
+  -f /app/SetPermissions/metadata.yml
+```
+
+---
+
 ## 🤝 Contributions
 
 Pull requests, issues, and discussions are welcome.  
@@ -47,4 +72,3 @@ If you have ideas for improving Hasura metadata automation or CI-friendly enhanc
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
-
