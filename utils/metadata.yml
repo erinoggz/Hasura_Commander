@@ -17,6 +17,8 @@ tables:
   - roles
   - tenants
   - user_activities
+views:
+  - latest_pollution_tests
 sources:
   - name: testDB
     kind: postgres
