@@ -5,6 +5,7 @@ import { setPermissions } from "../services/setPermissions";
 import { addDatabaseSource, dropDatabaseSource } from "../services/dropAddDatasource";
 import { trackAllTables } from "../services/trackAllTables";
 import { createEventTriggers } from "../services/createEventTrigger";
+import { trackAllViews } from "../services/trackAllViews";
 
 export async function runAllActions(
   hasuraUrl: string,
@@ -17,6 +18,7 @@ export async function runAllActions(
     await trackAllTables(hasuraUrl, hasuraAdminSecret, filePath);
     await trackCustomFunctions(hasuraUrl, hasuraAdminSecret, filePath);
     await trackAllRelationships(hasuraUrl, hasuraAdminSecret, filePath);
+    await trackAllViews(hasuraUrl, hasuraAdminSecret, filePath);
     await setPermissions(hasuraUrl, hasuraAdminSecret, filePath);
     await createEventTriggers(hasuraUrl, hasuraAdminSecret, filePath);
   } catch (error) {
